@@ -1,0 +1,37 @@
+Hello and thank you for your purchase!
+This asset contains a shader created with "ShaderGraph" as well as 3 different materials from which you can learn how to interact.
+
+There are only a few special conditions:
+
+1) In case you need to change the texture of the hatch, you need to make it the same as those used in materials. 
+Namely, to make RGB hatching.
+To do this, you'll need to recolor the texture in 3 colors for each direction you want. 
+For shaders to work correctly, they must also be blended behind the "Substruct" type along with the background.
+
+2) To find shadows, using an additional dependency in the form of the "Main Light Shadow" node.
+It was taken from the Cyanilux github - https://github.com/Cyanilux/URP_ShaderGraphCustomLighting, 
+for which I am very grateful to the author.
+In case of lighting errors from this node, it is recommended to download and install this extension.
+Installation instructions can be found in the README->Setup section
+
+3) In case you need to fix the position of the hatch on the object so that it does not move when 
+the camera shifts, you need to change the Position node parameter, which passes the UV for the Tilieng and Offset texture node,
+from the View parameter to the Object or World parameter.
+But then in this case, artifacts may appear in the texture rendering, namely its strong curvature on the object.
+
+
+Regarding the settings.
+There are several fields that can be confusing:
+
+1) Smoothstep parameters - needed to soften how many areas will be captured for drawing lines.
+
+2) EdgeSize - despite the name, is essentially responsible for shifting the maximum points of the normal and depth maps.
+Because of this, if you set a large value, for example 2 or more, a copy of the object will be visible at a distance, but painted black.
+Also, due to the calculation method, changes will be visible mainly only at certain numbers.
+I recommend using 0.5 or 1.0. Then a neat and clear line will be visible.
+
+Well, that's all for now.
+In the future, I promise to fix errors, if any.
+And I will also try to improve what is already there.
+
+Enjoy using and successful development!

@@ -1,0 +1,120 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8979025007874532868
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 7
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: HanddrawMaterial_v2
+  m_Shader: {fileID: -6465566751694194690, guid: 264635930c88e274e94893d4d89aa3b3,
+    type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _ENABLECROSSHATCH
+  - _ENABLETOONSHADOW
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _RGBCrossHatchTexture:
+        m_Texture: {fileID: 2800000, guid: e8b2938c686c9df4bbc9ea41dcdfcc61, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_425f5b7cd5b54e89885e1a2daa0b4c73_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 918260f1d2a3eea478cb92658b54cacc, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_94b68a6c181c4dbab30838637b29c973_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: c3535dd6a5e771244a39b5f467d5dcd6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_b8e29943ee1b41a88f1e95658eb4856c_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 1f96196487719b146902b8b7d72ff31c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_ce807b4e93c04448b13ac5ce6b1ad53d_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 918260f1d2a3eea478cb92658b54cacc, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_d850e4cd69bd45f284845f98d5de03a6_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 52796eb2630ff774f9f40c639277a0e9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_da5f57aef3f44585b39cd71538fde945_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: c3535dd6a5e771244a39b5f467d5dcd6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_f46b524218324d29b497172f986d18ba_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: c3535dd6a5e771244a39b5f467d5dcd6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ToonShadowTexture:
+        m_Texture: {fileID: 2800000, guid: d9f71ab1d063d3c49b5b73aee48be745, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _CrossHatchStrength: 5
+    - _DepthSmoothstepBegin: 0.1
+    - _DepthSmoothstepEnd: 0.1
+    - _ENABLECROSSHATCH: 1
+    - _ENABLETOONSHADOW: 1
+    - _EdgeOffsetForce: 1
+    - _NormalSmoothstepBegin: 0.2
+    - _NormalSmoothstepEnd: 0.5
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _SmoothstepBeginDetectOfDepth: 0.1
+    - _SmoothstepBeginDetectOfNormal: 0.2
+    - _SmoothstepEndDetectOfDepth: 0.1
+    - _SmoothstepEndDetectOfNormal: 0.5
+    - _ToonShadowTransparency: 0
+    m_Colors:
+    - _EdgeColor: {r: 0, g: 0, b: 0, a: 0}
+    - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _OffsetOfCrossHatchTexture: {r: 0, g: 0, b: 0, a: 0}
+    - _RemapMoebiusInput: {r: -1, g: 1, b: 0, a: 0}
+    - _RemapMoebiusOutput: {r: 0, g: 1, b: 0, a: 0}
+    - _RemapShadowInput: {r: -1, g: 1, b: 0, a: 0}
+    - _RemapShadowOutput: {r: -2.2, g: 1, b: 0, a: 0}
+    - _ShadowMAsk: {r: 1, g: 1, b: 1, a: 1}
+    - _Tiling: {r: 1, g: 1, b: 0, a: 0}
+    - _TilingOfCrossHatchTexture: {r: 1, g: 1, b: 0, a: 0}
+    - _Vector2: {r: 5, g: -5, b: 0, a: 0}
+    - _WorldSpaceLightPos0: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
