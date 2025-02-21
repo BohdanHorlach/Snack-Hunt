@@ -138,6 +138,8 @@ public class PlayerMovement : MonoBehaviour
         Vector3 moveDirection = cameraForward * inputDirection.y
                             + cameraRight * inputDirection.x;
 
+        moveDirection.y = 0;
+
         return moveDirection.normalized;
     }
 
