@@ -15,12 +15,14 @@ public class FoodCollector : MonoBehaviour
     private void OnEnable()
     {
         _foodFinder.OnObjectDetect += DetectFood;
+        _foodFinder.OnObjectLost += LostFood;
     }
 
 
     private void OnDisable()
     {
         _foodFinder.OnObjectDetect -= DetectFood;
+        _foodFinder.OnObjectLost -= LostFood;
     }
 
 
@@ -29,6 +31,17 @@ public class FoodCollector : MonoBehaviour
         Item itemInfo = food.GetComponent<Item>();
         _counter += itemInfo.ExpPoint;
         
+        OnCounterChange?.Invoke(_counter);
+    }
+
+
+    private void LostFood(Transform food)
+    {
+        Item itemInfo = food.GetComponent<Item>();
+        _counter -= itemInfo.ExpPoint;
+
+        Debug.Log(itemInfo);
+
         OnCounterChange?.Invoke(_counter);
     }
 }

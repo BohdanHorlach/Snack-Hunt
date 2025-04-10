@@ -14,17 +14,22 @@
 - (DistanceAtten is either 0 or 1 for directional light, depending if the light is in the culling mask or not)
 - If you want shadow attenutation, see MainLightShadows_float, or use MainLightFull_float instead
 */
-void MainLight_float (out float3 Direction, out float3 Color, out float DistanceAtten){
-	#ifdef SHADERGRAPH_PREVIEW
-		Direction = normalize(float3(1,1,-0.4));
-		Color = float4(1,1,1,1);
-		DistanceAtten = 1;
-	#else
-		Light mainLight = GetMainLight();
-		Direction = mainLight.direction;
-		Color = mainLight.color;
-		DistanceAtten = mainLight.distanceAttenuation;
-	#endif
+void MainLight_float(float3 WorldPos, out float3 Direction, out float3 Color, out float DistanceAtten, out float ShadowAtten)
+{
+#ifdef SHADERGRAPH_PREVIEW
+    Direction = float3(0.5, 0.5, 0);
+    Color = 1;
+    DistanceAtten = 1;
+    ShadowAtten = 1;
+#else
+    float4 shadowCoord = TransformWorldToShadowCoord(WorldPos);
+
+    Light mainLight = GetMainLight(shadowCoord);
+    Direction = mainLight.direction;
+    Color = mainLight.color;
+    DistanceAtten = mainLight.distanceAttenuation;
+    ShadowAtten = mainLight.shadowAttenuation;
+#endif
 }
 
 //------------------------------------------------------------------------------------------------------

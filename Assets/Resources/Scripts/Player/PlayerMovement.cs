@@ -16,10 +16,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _gravityMultiplier = 1.5f;
     [SerializeField] private float _downforceByMotion = 0.1f;
 
+    private float VELOCITY_THRESHOLD = 0.1f;
 
     private Transform _camera;
     private CameraDirectionBuffer _cameraBufferDirection;
     private Vector3 _velocity;
+    private Vector3 _previousVelocity;
     private Vector3 _surfaceNormal;
     private Vector2 _inputDirection;
     private Vector2 _bufferInputDirection;
@@ -39,8 +41,12 @@ public class PlayerMovement : MonoBehaviour
 
     private bool IsCanMove => _isInput && _playerState.IsBusy == false;
     private bool IsCanJump => _playerState.IsOnGround
-                            && _playerState.IsHoldingObject == false
+                            //&& _playerState.IsHoldingObject == false
                             && _playerState.IsBusy == false;
+
+    public bool IsSptinting { get => _isSprint; }
+    public bool IsSilentWalking { get => _isSilentWalk; }
+
 
 
     private void Awake()
@@ -89,7 +95,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            Move(Vector3.zero, 0);
+            Move(Vector3.zero, CurrentSpeed);
         }
     }
 
@@ -119,6 +125,8 @@ public class PlayerMovement : MonoBehaviour
             _velocity.y = -_gravity * _gravityMultiplier * Time.fixedDeltaTime;
         else
             _velocity.y -= _gravity * _gravityMultiplier * Time.fixedDeltaTime;
+
+        _previousVelocity = _velocity;
     }
 
 
@@ -159,19 +167,20 @@ public class PlayerMovement : MonoBehaviour
     {
         Debug.DrawRay(transform.position, direction * 10, Color.red);
 
-        Vector3 offset = direction * speed * Time.deltaTime;
-        offset += _velocity * Time.deltaTime;
+        Vector3 horizontalOffset = direction * speed * Time.deltaTime;
+        Vector3 verticaloffset = _velocity * Time.deltaTime;
 
-        _characterController.Move(offset);
+        if (_isJump || Vector3.Distance(_velocity, _previousVelocity) <= VELOCITY_THRESHOLD)
+            horizontalOffset.y = 0;
+
+        _characterController.Move(horizontalOffset + verticaloffset);
     }
 
 
     private void RotateToDirection(Vector3 direction)
     {
-        if (direction == Vector3.zero)
-            return;
-
         direction.y = 0;
+        direction = direction == Vector3.zero ? _characterController.transform.forward : direction;
 
         Quaternion lookAtOffset = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, lookAtOffset, _rotateSpeed * Time.deltaTime);
@@ -199,7 +208,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (IsCanJump == false || context.started == false)
             return;
-
+        
         _velocity.y += _jumpForce;
         _jumpMoveSpeed = CurrentSpeed;
         _isJump = true;

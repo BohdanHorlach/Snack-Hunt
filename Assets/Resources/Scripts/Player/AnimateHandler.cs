@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,32 +7,37 @@ public class AnimateHandler : MonoBehaviour
 {
     [SerializeField] private Animator _animator;
     [SerializeField] private PlayerState _playerState;
-    [SerializeField] private ClimbHandler _climbHandler;
+    [SerializeField] private Climber _climber;
     [SerializeField] private ObjectGrabber _objectGrabber;
     [SerializeField] private ObjectThrower _objectThrower;
 
+    private const float JUMP_COOLDOWN = 0.5f;
     private bool _isRunning;
     private bool _isSprint;
     private bool _isSilentWalking;
 
+    public Action OnMakeStep;
 
 
     private void OnEnable()
     {
         _objectThrower.OnThrow += PlayThrow;
-        _climbHandler.OnClimb += PlayClimb;
+        _climber.OnClimb += PlayClimb;
     }
 
 
     private void OnDisable()
     {
         _objectThrower.OnThrow -= PlayThrow;
-        _climbHandler.OnClimb -= PlayClimb;
+        _climber.OnClimb -= PlayClimb;
     }
 
 
     private void Update()
     {
+        if (_climber.IsClimbing)
+            return;
+
         _animator.SetBool("IsOnGround", _playerState.IsOnGround);
         _animator.SetBool("IsRunning", _isRunning && _playerState.IsOnGround && _playerState.IsReadyToThrow == false);
         _animator.SetBool("IsSprint", _isSprint);
@@ -39,29 +45,38 @@ public class AnimateHandler : MonoBehaviour
     }
 
 
-    private void TakeObject()
-    {
-        if (_objectGrabber.TryTakeObject() == true)
-            _animator.SetTrigger("TakeObject");
-    }
-
-
     private void DropObject()
     {
         _objectGrabber.DropObject();
-        _animator.SetTrigger("DropObject");
+        _animator.SetBool("IsHoldingObject", false);
     }
 
 
     private void PlayThrow()
     {
         _animator.SetTrigger("ThrowObject");
+        _animator.SetBool("IsHoldingObject", false);
     }
 
 
     private void PlayClimb()
     {
-        _animator.SetTrigger("MakeClimb");
+        if(_objectGrabber.IsHoldingObject == false)
+            _animator.SetTrigger("MakeClimb");
+    }
+
+
+    //Calls from animate
+    private void MakeStep()
+    {
+        OnMakeStep?.Invoke();
+    }
+
+
+    public void TakeObject()
+    {
+        if (_objectGrabber.TryTakeObject() == true)
+            _animator.SetBool("IsHoldingObject", true);
     }
 
 
@@ -83,10 +98,21 @@ public class AnimateHandler : MonoBehaviour
     }
 
 
+    private void ResetIsJumping()
+    {
+        _animator.SetBool("IsJumping", false);
+    }
+
+
     public void PlayJump(InputAction.CallbackContext context)
     {
-        if (context.started && _playerState.IsOnGround && _playerState.IsHoldingObject == false && _playerState.IsBusy == false)
-            _animator.SetTrigger("Jump");
+        if (context.started && _playerState.IsOnGround && !_playerState.IsBusy)
+        {
+            _animator.SetTrigger("MakeJump");
+            _animator.SetBool("IsJumping", true);
+            _animator.SetBool("IsOnGround", false);
+            Invoke("ResetIsJumping", JUMP_COOLDOWN);
+        }
     }
 
 
