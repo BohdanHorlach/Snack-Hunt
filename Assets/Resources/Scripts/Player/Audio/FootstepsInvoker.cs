@@ -6,6 +6,7 @@ using UnityEngine;
 public class FootstepsInvoker : MonoBehaviour
 {
     [SerializeField] private PlayerMovement _player;
+    [SerializeField] private PlayerState _state;
     [SerializeField] private AnimateHandler _animateHandler;
     [SerializeField] private AudioInvoker _audioInvoker;
     [SerializeField] private AudioInvokerInfo _runningAudio;
@@ -52,6 +53,9 @@ public class FootstepsInvoker : MonoBehaviour
 
     private void PlayFootstep()
     {
+        if (_state.IsOnGround == false)
+            return;
+
         AudioInvokerInfo audioSource = GetFootstepsSource();
 
         _audioInvoker.SetAudioSource(

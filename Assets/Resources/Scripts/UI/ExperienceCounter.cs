@@ -6,20 +6,33 @@ using UnityEngine;
 
 public class ExperienceCounter : MonoBehaviour
 {
-    [SerializeField] private FoodCollector _foodCollector;
+    [SerializeField] private GameOverTrigger _exitTrigger;
+    [SerializeField] private FoodCollector[] _foodCollectors;
     [SerializeField] private TextMeshProUGUI _output;
     [SerializeField, Min(0.1f)] private float _speedTransition = 0.5f;
 
 
     private void OnEnable()
     {
-        _foodCollector.OnCounterChange += StartTransition;
+        foreach (var foodCollector in _foodCollectors)
+        {
+            foodCollector.OnCounterChange += StartTransition;
+            foodCollector.OnDropFood += DropFood;
+        }
+
+        _exitTrigger.OnTriggered += ResetOutput;
     }
 
 
     private void OnDisable()
     {
-        _foodCollector.OnCounterChange -= StartTransition;
+        foreach (var foodCollector in _foodCollectors)
+        {
+            foodCollector.OnCounterChange -= StartTransition;
+            foodCollector.OnDropFood += DropFood;
+        }
+
+        _exitTrigger.OnTriggered -= ResetOutput;
     }
 
 
@@ -27,6 +40,18 @@ public class ExperienceCounter : MonoBehaviour
     {
         StopCoroutine("UpdateCounter");
         StartCoroutine(UpdateCounter(exp));
+    }
+
+
+    private void DropFood(Item item)
+    {
+        StartTransition(item.ExpPoint);
+    }
+
+
+    private void ResetOutput()
+    {
+        _output.text = "0";
     }
 
 

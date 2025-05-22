@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -6,6 +7,7 @@ public class TimeRewinder : MonoBehaviour
 {
     [SerializeField] private float _recordingDuration = 10f;
 
+    private IOnRewind[] _otherRewinds;
     private PositionRecorder _recorder;
 
 
@@ -13,6 +15,10 @@ public class TimeRewinder : MonoBehaviour
     {
         RecordingObject[] recordingObjects = FindObjectsByType<RecordingObject>(FindObjectsSortMode.None);
         _recorder = new PositionRecorder(recordingObjects, _recordingDuration);
+
+        _otherRewinds = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
+                .OfType<IOnRewind>()
+                .ToArray();
     }
 
 
@@ -22,7 +28,7 @@ public class TimeRewinder : MonoBehaviour
     }
 
 
-    public void Rewind()
+    private void RewindPosition()
     {
         List<RecordingInfo> recordingPositions = _recorder.GetLastPositions();
 
@@ -32,5 +38,19 @@ public class TimeRewinder : MonoBehaviour
         }
 
         _recorder.ClearRecorded();
+    }
+
+
+    private void RewindOther()
+    {
+        foreach (var item in _otherRewinds)
+            item.OnRewind();
+    }
+
+
+    public void Rewind()
+    {
+        RewindOther();
+        RewindPosition();
     }
 }

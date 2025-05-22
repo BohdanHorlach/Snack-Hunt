@@ -7,6 +7,7 @@ public class ObjectThrower : MonoBehaviour
 {
     [SerializeField] private Transform _baseTransform;
     [SerializeField] private Transform _throwPlace;
+    [SerializeField] private PlayerState _playerState;
     [SerializeField] private ObjectGrabber _objectGrabber;
     [SerializeField] private LineRenderer _lineRenderer;
     [SerializeField] private Transform _releasePosition;
@@ -19,6 +20,9 @@ public class ObjectThrower : MonoBehaviour
 
 
     private Vector3 _throwDirection;
+    private bool IsCanThrow => _playerState.IsOnGround
+                            && _playerState.IsHoldingObject
+                            && IsReadyToThrow;   
     public bool IsReadyToThrow { get; private set; } = false;
     public bool IsThrowing { get; private set; } = false;
 
@@ -34,12 +38,24 @@ public class ObjectThrower : MonoBehaviour
     }
 
 
+    private void OnEnable()
+    {
+        _objectGrabber.OnDrop += Drop;
+    }
+
+
+    private void OnDisable()
+    {
+        _objectGrabber.OnDrop -= Drop;
+    }
+
+
     private void Update()
     {
-        if (_objectGrabber.Item == null && IsReadyToThrow == true)
-            Drop();
+        if (IsCanThrow == false || _playerState.IsPaused)
+            return;
 
-        if (IsReadyToThrow == true && IsThrowing == false)
+        if (IsThrowing == false)
         {
             _baseTransform.rotation = Quaternion.Euler(
                 _baseTransform.eulerAngles.x,
@@ -148,11 +164,14 @@ public class ObjectThrower : MonoBehaviour
 
     public void ThrowToCameraDirection()
     {
+        if (_objectGrabber.Item == null)
+            return;
+
         Rigidbody itemBody = _objectGrabber.Item.Rigidbody;
         _objectGrabber.DropObject();
 
         itemBody.freezeRotation = false;
-        itemBody.velocity = Vector3.zero;
+        itemBody.linearVelocity = Vector3.zero;
         itemBody.angularVelocity = Vector3.zero;
         itemBody.AddForce(_throwDirection * _throwStrength, ForceMode.Impulse);
     }

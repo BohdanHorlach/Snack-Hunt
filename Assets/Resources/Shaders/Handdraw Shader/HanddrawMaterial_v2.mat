@@ -95,6 +95,7 @@ Material:
     - _ENABLECROSSHATCH: 1
     - _ENABLETOONSHADOW: 1
     - _EdgeOffsetForce: 1
+    - _EdgeSize: 0.5
     - _NormalSmoothstepBegin: 0.2
     - _NormalSmoothstepEnd: 0.5
     - _QueueControl: 0

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 
@@ -12,6 +13,8 @@ public class ObjectGrabber : MonoBehaviour
 
     [HideInInspector] public Item Item;
     public bool IsHoldingObject => Item != null;
+
+    public event Action OnDrop;
 
 
     private void OnEnable()
@@ -102,8 +105,13 @@ public class ObjectGrabber : MonoBehaviour
 
     public void DropObject()
     {
+        if (Item == null)
+            return;
+
         SetNewPlace(null);
         EnableRigidbody(Item.Rigidbody);
         Item = null;
+
+        OnDrop?.Invoke();
     }
 }

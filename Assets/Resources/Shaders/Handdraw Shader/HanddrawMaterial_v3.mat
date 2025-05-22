@@ -26,7 +26,6 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _ENABLECROSSHATCH
   - _ENABLETOONSHADOW
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -92,7 +91,7 @@ Material:
     - _CrossHatchStrength: 5
     - _DepthSmoothstepBegin: 0.1
     - _DepthSmoothstepEnd: 0.1
-    - _ENABLECROSSHATCH: 1
+    - _ENABLECROSSHATCH: 0
     - _ENABLETOONSHADOW: 1
     - _EdgeOffsetForce: 0.5
     - _EdgeSize: 0.5
@@ -104,7 +103,7 @@ Material:
     - _SmoothstepBeginDetectOfNormal: 0.2
     - _SmoothstepEndDetectOfDepth: 0.1
     - _SmoothstepEndDetectOfNormal: 0.5
-    - _ToonShadowTransparency: 0.292
+    - _ToonShadowTransparency: 1
     m_Colors:
     - _EdgeColor: {r: 0, g: 0, b: 0, a: 0}
     - _Offset: {r: 0, g: 0, b: 0, a: 0}
@@ -112,7 +111,7 @@ Material:
     - _RemapMoebiusInput: {r: -1, g: 1, b: 0, a: 0}
     - _RemapMoebiusOutput: {r: 0, g: 1, b: 0, a: 0}
     - _RemapShadowInput: {r: -1, g: 1, b: 0, a: 0}
-    - _RemapShadowOutput: {r: -0.5, g: 1, b: 0, a: 0}
+    - _RemapShadowOutput: {r: 0.5, g: 1, b: 0, a: 0}
     - _ShadowMAsk: {r: 1, g: 1, b: 1, a: 1}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
     - _TilingOfCrossHatchTexture: {r: 1, g: 1, b: 0, a: 0}

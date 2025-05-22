@@ -13,13 +13,14 @@ public class Climber : MonoBehaviour
     [SerializeField] private Transform _finalClimbPosition;
     [SerializeField] private LayerMask _obstacleMask;
 
-    private const float Y_OFFSET_FOR_CLIMB = 0.8f;
+    private const float Y_OFFSET_FOR_CLIMB = 0.6f;
     private const float RAY_CAST_DISTANCE = 5f;
 
     private Vector3 _finalPosition;
     private bool IsCanClimb => _freeSpaceOfClimbFinder.IsHaveObjectInSpace == false
                             && _obstacleFinder.IsHaveObjectInSpace == true
-                            && _playerState.IsBusy == false;
+                            && _playerState.IsBusy == false
+                            && _playerState.IsHoldingObject == false;
 
     public bool IsClimbing { get; private set; } = false;
 
@@ -29,6 +30,9 @@ public class Climber : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_playerState.IsPaused)
+            return;
+
         AutoClimb();
     }
 
@@ -69,7 +73,7 @@ public class Climber : MonoBehaviour
 
     public void Climb(InputAction.CallbackContext context)
     {
-        if (context.started && IsCanClimb)
+        if (context.started && IsCanClimb && !_playerState.IsPaused)
             MakeClimb();
     }
 

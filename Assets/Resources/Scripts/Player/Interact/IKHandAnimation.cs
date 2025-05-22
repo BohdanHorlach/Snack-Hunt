@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -6,9 +7,11 @@ public class IKHandAnimation : MonoBehaviour
 {
     [SerializeField] private TwoBoneIKConstraint _twoBoneIKConstraint;
     [SerializeField] private Transform _IKHandTarget;
+    [SerializeField] private float _duration = 1f;
     [SerializeField] private bool _isRight;
 
     private Transform _holdingPosition;
+    
     public HoldingObjectInfo HoldingObject { get; private set; }
 
 
@@ -26,15 +29,29 @@ public class IKHandAnimation : MonoBehaviour
     }
 
 
+    private void ChangeIKWeight(bool isTake)
+    {
+        float start = isTake ? 0 : 1;
+        float end = isTake ? 1 : 0;
+
+        DOVirtual.Float(start, end, _duration,
+            (value) => {
+                _twoBoneIKConstraint.weight = value;
+            }
+        );
+    }
+
+
     public void TakeObject(HoldingObjectInfo item)
     {
         _holdingPosition = GetHoldingPosition(item);
+        ChangeIKWeight(true);
     }
 
 
     public void DropObject()
     {
         _holdingPosition = null;
-        _twoBoneIKConstraint.weight = 0;
+        ChangeIKWeight(false);
     }
 }
