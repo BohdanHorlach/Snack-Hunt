@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 
-public class NPCStateMachine : MonoBehaviour
+public class NPCStateMachine : MonoBehaviour, IOnRewind
 {
     [SerializeField] private NPCMovement _enemyMovement;
     [SerializeField] private NPCInteractivePatroller _patroller;
@@ -10,6 +10,7 @@ public class NPCStateMachine : MonoBehaviour
     [SerializeField] private NPCInteraction _interaction;
     [SerializeField] private NoiseDetecter _noiseDetect;
     [SerializeField] private PlayerDetecter _playerDetecter;
+    [SerializeField] private HeadRotator _headRotator;
     [SerializeField] private Transform _startPosition;
     [SerializeField] private bool _needInteraction;
 
@@ -18,15 +19,14 @@ public class NPCStateMachine : MonoBehaviour
     private NPCState[] _enemyStates;
     private NPCState _currentState;
     private bool _isDetectedNoise = false;
+    private bool _isFindPlayer = false;
     private bool _isSearchingEnd = false;
 
-    private bool IsIdle;// => _currentState == _enemyStates[(int)NPCStateType.Idle];
-    private bool IsSearch;
-    public bool IsPatrolling;// => _currentState == _enemyStates[(int)NPCStateType.Patrol];
+    public bool IsPatrolling => _currentState == _enemyStates[(int)NPCStateType.Patrol];
 
     public Action OnSleepToSearch;
     public Action OnTransitionSearchToAttack;
-    public Action OnDetectPlayer;
+    public Action<Transform> OnDetectPlayer;
 
 
     private void Awake()
@@ -62,9 +62,8 @@ public class NPCStateMachine : MonoBehaviour
 
     private void Update()
     {
-        IsIdle = _currentState == _enemyStates[(int)NPCStateType.Idle];
-        IsSearch = _currentState == _enemyStates[(int)NPCStateType.Search];
-        IsPatrolling = _currentState == _enemyStates[(int)NPCStateType.Patrol];
+        if (_isFindPlayer)
+            return;
 
         SwitchState();
     }
@@ -106,7 +105,11 @@ public class NPCStateMachine : MonoBehaviour
 
     private void DetectPlayer(Vector3 position)
     {
-        OnDetectPlayer?.Invoke();
+        if (_isFindPlayer)
+            return;
+
+        OnDetectPlayer?.Invoke(_headRotator.Head);
+        _isFindPlayer = true;
     }
 
 
@@ -170,5 +173,11 @@ public class NPCStateMachine : MonoBehaviour
             _searcherInSpace.StartSearch();
             OnSleepToSearch?.Invoke();
         });
+    }
+
+
+    public void OnBeforeRewind()
+    {
+        _isFindPlayer = false;
     }
 }

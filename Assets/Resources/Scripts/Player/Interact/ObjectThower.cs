@@ -73,17 +73,6 @@ public class ObjectThrower : MonoBehaviour
     }
 
 
-    private void PrepareToThrow()
-    {
-        _objectGrabber.SetNewPlace(_throwPlace);
-        HoldingPosition throwPosition = _objectGrabber.Item.HoldingInfo.ThrowTransform;
-        _objectGrabber.Item.transform.localPosition = throwPosition.Position;
-        _objectGrabber.Item.transform.localRotation = throwPosition.Rotation;
-
-        _throwDirection = GetThrowDirection();
-    }
-
-
     private void DrawProjection()
     {
         _lineRenderer.enabled = true;
@@ -130,8 +119,22 @@ public class ObjectThrower : MonoBehaviour
     }
 
 
+    private void PrepareToThrow()
+    {
+        _objectGrabber.SetNewPlace(_throwPlace);
+        HoldingPosition throwPosition = _objectGrabber.Item.HoldingInfo.ThrowTransform;
+        _objectGrabber.Item.transform.localPosition = throwPosition.Position;
+        _objectGrabber.Item.transform.localRotation = throwPosition.Rotation;
+
+        _throwDirection = GetThrowDirection();
+    }
+
+
     public void GetReadyToThrow(InputAction.CallbackContext context)
     {
+        if (_playerState.IsOnGround == false)
+            return;
+
         if (Application.isFocused == false || _objectGrabber.IsHoldingObject == false)
         {
             Cancele();

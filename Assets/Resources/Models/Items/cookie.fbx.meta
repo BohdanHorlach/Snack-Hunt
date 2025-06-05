@@ -24,6 +24,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Packing_2
     second: {fileID: 2100000, guid: 6e520f805aa250d47b27685abefded03, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pallete
+    second: {fileID: 2100000, guid: accaa752f8ea7594c91a3ee1d6962d31, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -36,8 +41,6 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 

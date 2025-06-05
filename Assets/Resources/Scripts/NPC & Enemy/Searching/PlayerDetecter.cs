@@ -10,6 +10,8 @@ public class PlayerDetecter : MonoBehaviour
     private ObjectSearcher _objectSearcher;
     private bool _isLost = false;
 
+    public bool IsDetect { get; private set; }
+
     public Action<Vector3> OnPlayerDetect;
     public Action<Vector3> OnPlayerLost;
 
@@ -42,14 +44,14 @@ public class PlayerDetecter : MonoBehaviour
 
     private void Search()
     {
-        bool playerDetected = _objectSearcher.SearchByDotProduct(transform, _player)
+        IsDetect = _objectSearcher.SearchByDotProduct(transform, _player)
                             && _objectSearcher.SearchByRays(_player);
 
         //Debug.Log($"SearchByDotProduct: {_objectSearcher.SearchByDotProduct(transform, _player) }");
         //Debug.Log($"SearchByRays: {_objectSearcher.SearchByRays(_player)}");
-       
-        //Debug.Log(playerDetected);
-        if (playerDetected)
+
+        //Debug.Log(IsDetect);
+        if (IsDetect)
         {
             Detect();
         }

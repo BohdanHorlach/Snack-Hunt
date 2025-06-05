@@ -1,44 +1,44 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 
 public class PauseHandler : MonoBehaviour
 {
-    [SerializeField] private UIAnimateHandler _UIAnimateHandler;
+    [SerializeField] private static UIAnimateHandler _UIAnimateHandler;
 
-    private static PausedObject[] _pauseds;
+    private static IPaused[] _pauseds;
     private static bool _isPaused = false;
 
 
     public void Awake()
     {
-        _pauseds = FindObjectsByType<PausedObject>(FindObjectsSortMode.None);
+        _pauseds = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
+                    .OfType<IPaused>()
+                    .ToArray();
     }
 
 
-    private static void Play()
+    public static void Play()
     {
-        foreach (PausedObject item in _pauseds)
+        foreach (IPaused item in _pauseds)
             item.Resume();
+
+        _isPaused = false;
     }
 
 
-    private static void Pause()
+    public static void Pause(bool withUI)
     {
-        foreach (PausedObject item in _pauseds)
+        foreach (IPaused item in _pauseds)
             item.Pause();
+
+        _isPaused = true;
+
+        if(withUI)
+            _UIAnimateHandler.Pause();
     }
 
-
-    public static void SwitchMode()
-    {
-        if (_isPaused)
-            Play();
-        else
-            Pause();
-
-        _isPaused = !_isPaused;
-    }
 
 
     public void InputPause(InputAction.CallbackContext context)
@@ -49,6 +49,6 @@ public class PauseHandler : MonoBehaviour
         if (_isPaused)
             _UIAnimateHandler.BackToPlay();
         else
-            SwitchMode();
+            Pause(true);
     }
 }

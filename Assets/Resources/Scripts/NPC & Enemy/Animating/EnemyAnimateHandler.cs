@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 
-public class EnemyAnimateHandler : PausedObject
+public class EnemyAnimateHandler : MonoBehaviour, IPaused
 {
     [SerializeField] private Animator _animator;
     [SerializeField] private EnemyStateMachine _enemyStateMachine;
@@ -14,14 +14,13 @@ public class EnemyAnimateHandler : PausedObject
 
     public Action OnAttack;
 
+
     private void OnEnable()
     {
         _enemyAttack.OnAttack += PlayAttack;
         _enemyAttack.OnBeforeLost += PlaySearch;
-        _enemyAttack.OnBackToAttack += DetectPlayer;
         _searcherInSpace.OnReachingWaypoint += PlaySearch;
         _enemyStateMachine.OnSleepToSearch += PlayStandUp;
-        _enemyStateMachine.OnTransitionSearchToAttack += DetectPlayer;
     }
 
 
@@ -29,10 +28,8 @@ public class EnemyAnimateHandler : PausedObject
     {
         _enemyAttack.OnAttack -= PlayAttack;
         _enemyAttack.OnBeforeLost -= PlaySearch;
-        _enemyAttack.OnBackToAttack -= DetectPlayer;
         _searcherInSpace.OnReachingWaypoint -= PlaySearch;
         _enemyStateMachine.OnSleepToSearch -= PlayStandUp;
-        _enemyStateMachine.OnTransitionSearchToAttack -= DetectPlayer;
     }
 
 
@@ -42,12 +39,7 @@ public class EnemyAnimateHandler : PausedObject
         _animator.SetBool("IsMoving", _enemyMovement.IsReachedDestination == false);
         _animator.SetBool("IsSprinting", _enemyMovement.IsSprinting);
         _animator.SetBool("IsCreepWalking", _enemyMovement.IsCreepWalking);
-    }
-
-
-    private void DetectPlayer()
-    {
-        _animator.SetTrigger("Detect");
+        _animator.SetBool("IsDetect", _playerDetecter.IsDetect);
     }
 
 
@@ -72,18 +64,18 @@ public class EnemyAnimateHandler : PausedObject
 
     private void PlaySearch()
     {
-        if(_enemyAttack.IsAttaking == false)
+        if (_enemyAttack.IsAttaking == false)
             _animator.SetTrigger("Search");
     }
 
 
-    public override void Pause()
+    public void Pause()
     {
         _animator.enabled = false;
     }
 
 
-    public override void Resume()
+    public void Resume()
     {
         _animator.enabled = true;
     }

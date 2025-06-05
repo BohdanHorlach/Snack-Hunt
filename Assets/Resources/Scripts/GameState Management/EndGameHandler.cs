@@ -1,7 +1,7 @@
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using Unity.Cinemachine;
+using System;
 
 
 public class EndGameHandler : MonoBehaviour
@@ -20,13 +20,14 @@ public class EndGameHandler : MonoBehaviour
     private bool _isEndGame;
 
 
-    public UnityEvent OnGameEnded;
+    public Action OnGameEnded;
 
 
     private void Awake()
     {
         _camera.DefaultBlend.Style = CinemachineBlendDefinition.Styles.EaseIn;
         _endGameVirtualCamera.Priority = -1;
+        _endGameVirtualCamera.gameObject.SetActive(false);
     }
 
 
@@ -55,6 +56,7 @@ public class EndGameHandler : MonoBehaviour
     //Calls from animation
     private void ChangeVirtualCamera()
     {
+        _endGameVirtualCamera.gameObject.SetActive(true);
         _endGameVirtualCamera.Priority = int.MaxValue;
     }
 
@@ -69,7 +71,7 @@ public class EndGameHandler : MonoBehaviour
     private void SetEndGameState()
     {
         _isEndGame = true;
-        OnGameEnded.Invoke();
+        OnGameEnded?.Invoke();
     }
 
 

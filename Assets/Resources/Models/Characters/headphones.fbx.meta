@@ -14,6 +14,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: EarPods_2.001
     second: {fileID: 2100000, guid: 9881810fb34aafa42bedb1479e641934, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pallete
+    second: {fileID: 2100000, guid: accaa752f8ea7594c91a3ee1d6962d31, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -26,8 +31,6 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 

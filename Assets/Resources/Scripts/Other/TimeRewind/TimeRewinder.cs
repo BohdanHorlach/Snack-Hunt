@@ -41,16 +41,20 @@ public class TimeRewinder : MonoBehaviour
     }
 
 
-    private void RewindOther()
+    private void PrepareToRewind()
     {
         foreach (var item in _otherRewinds)
-            item.OnRewind();
+            item.OnBeforeRewind();
     }
 
 
+
+    //Call from animator
     public void Rewind()
     {
-        RewindOther();
+        PrepareToRewind();
         RewindPosition();
+
+        PauseHandler.Play();
     }
 }

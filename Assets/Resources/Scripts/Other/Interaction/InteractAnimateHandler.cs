@@ -5,7 +5,7 @@ using UnityEngine.Animations;
 using UnityEngine.Playables;
 
 
-public class InteractAnimateHandler : PausedObject
+public class InteractAnimateHandler : MonoBehaviour, IPaused
 {
     [SerializeField] protected Animator _animator;
     [SerializeField] private RuntimeAnimatorController _controller;
@@ -211,17 +211,21 @@ public class InteractAnimateHandler : PausedObject
     }
 
 
-    public override void Pause()
+    public void Pause()
     {
         _isPaused = true;
-        _topLevelMixer.Pause();
+
+        if(_topLevelMixer.IsNull() == false)
+            _topLevelMixer.Pause();
     }
 
 
-    public override void Resume()
+    public void Resume()
     {
         _isPaused = false;
-        _topLevelMixer.Play();
+
+        if (_topLevelMixer.IsNull() == false)
+            _topLevelMixer.Play();
     }
 
 

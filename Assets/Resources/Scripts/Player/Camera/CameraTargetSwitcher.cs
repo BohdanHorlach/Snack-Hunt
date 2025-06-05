@@ -1,9 +1,13 @@
 using DG.Tweening;
+using System;
+using Unity.Cinemachine;
 using UnityEngine;
 
 
 public class CameraTargetSwitcher : MonoBehaviour
 {
+    [SerializeField] private CinemachineCamera _virtualCamera;
+    [SerializeField] private UIAnimateHandler _uiAnimator;
     [SerializeField] private ObjectThrower _objectThrower;
     [SerializeField] private Climber _climber;
     [SerializeField] private Transform _targetParent;
@@ -23,6 +27,7 @@ public class CameraTargetSwitcher : MonoBehaviour
 
     private void OnEnable()
     {
+        _uiAnimator.OnRewindEnd += OnRewindEnd;
         _objectThrower.OnPrepareToThrow += SwitchToThrowMode;
         _objectThrower.OnCanceledPrepareToThrow += SwitchToDefaultMode;
         _objectThrower.OnThrow += SwitchToDefaultMode;
@@ -33,6 +38,7 @@ public class CameraTargetSwitcher : MonoBehaviour
 
     private void OnDisable()
     {
+        _uiAnimator.OnRewindEnd -= OnRewindEnd;
         _objectThrower.OnPrepareToThrow -= SwitchToThrowMode;
         _objectThrower.OnCanceledPrepareToThrow -= SwitchToDefaultMode;
         _objectThrower.OnThrow -= SwitchToDefaultMode;
@@ -69,5 +75,25 @@ public class CameraTargetSwitcher : MonoBehaviour
     {
         _cameraTarget.SetParent(_targetParent);
         SwitchTo(_targetLocalPosition);
+    }
+
+
+    public void LookAt(Transform transform, Action callback = null)
+    {
+        _virtualCamera.enabled = false;
+        Transform camera = Camera.main.transform;
+
+        Vector3 direction = (transform.position - camera.position).normalized;
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+        camera.DORotateQuaternion(targetRotation, _duration)
+            .SetEase(Ease.OutSine)
+            .OnComplete(() => callback?.Invoke());
+    }
+
+
+    public void OnRewindEnd()
+    {
+        _virtualCamera.enabled = true;
     }
 }

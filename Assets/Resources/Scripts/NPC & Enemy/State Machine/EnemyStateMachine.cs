@@ -8,7 +8,7 @@ public class EnemyStateMachine : MonoBehaviour
     [SerializeField] private Patroller _patroller;
     [SerializeField] private SearcherInSpace _searcherInSpace;
     [SerializeField] private EnemyAttack _enemyAttack;
-    [SerializeField] private VisibilityByPlayer _visibilityByPlayer;
+    [SerializeField] private VisibilityByOther _visibilityByPlayer;
     [SerializeField] private NoiseDetecter _noiseDetect;
     [SerializeField] private PlayerDetecter _playerDetecter;
     [SerializeField] private float _distanceForSprint = 30f;
@@ -62,9 +62,9 @@ public class EnemyStateMachine : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log($"IsAttaking: {IsAttaking}");
-        Debug.Log($"IsPatrolling: {IsPatrolling}");
-        Debug.Log($"IsSearching: {IsSearching}");
+        //Debug.Log($"IsAttaking: {IsAttaking}");
+        //Debug.Log($"IsPatrolling: {IsPatrolling}");
+        //Debug.Log($"IsSearching: {IsSearching}");
 
         SwitchState();
 

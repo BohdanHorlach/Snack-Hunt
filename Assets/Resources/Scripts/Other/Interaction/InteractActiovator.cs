@@ -8,9 +8,12 @@ public class InteractActivator : MonoBehaviour
     [SerializeField] private ObjectFinderByMask _interactFinder;
     [SerializeField] private Transform _attacheblePlace;
 
+    private Vector3 _defaultInteractionObjectPosition;
     protected InteractionObject _interaction;
 
-    public bool IsHaveInteract => _interaction != null && !_interaction.IsActive;
+    public bool IsHaveInteract => _interaction != null 
+                                && !_interaction.IsActive 
+                                && _interactFinder.IsHaveObjectInSpace;
     public bool InteractIsFinished { get; private set; } = true;
 
 
@@ -35,8 +38,17 @@ public class InteractActivator : MonoBehaviour
 
     private void AttachInteractObjectToPlace(Transform attacheblePlace)
     {
-        if (_interaction.AttachebleObject != null)
-            _interaction.AttachebleObject.SetParent(attacheblePlace);
+        if (_interaction.AttachebleObject == null)
+            return;
+
+        Transform interact = _interaction.AttachebleObject;
+
+        if (attacheblePlace == null)
+            interact.position = _defaultInteractionObjectPosition;
+        else
+            _defaultInteractionObjectPosition = interact.position;
+
+        interact.SetParent(attacheblePlace);
     }
 
 
@@ -101,8 +113,6 @@ public class InteractActivator : MonoBehaviour
 
     public void AbortInteract(Action callback)
     {
-        //Debug.Log("AbortInteract");
-
         if (InteractIsFinished)
         {
             callback?.Invoke();

@@ -6,10 +6,10 @@ public class ObjectGrabber : MonoBehaviour
 {
     [SerializeField] private ObjectFinderByMask _itemFinder;
     [SerializeField] private IKHandAnimation[] _handIKAnimations;
+    [SerializeField] private PlayerState _playerState;
     [SerializeField] private Transform _holdingPlace;
 
     private Transform _foundItem;
-    private bool _isCanGrab => _foundItem != null;
 
     [HideInInspector] public Item Item;
     public bool IsHoldingObject => Item != null;
@@ -84,7 +84,7 @@ public class ObjectGrabber : MonoBehaviour
 
     public bool TryTakeObject()
     {
-        if (_isCanGrab == false || Item != null)
+        if (_foundItem == null || Item != null)
             return false;
 
         Item = _foundItem.GetComponent<Item>();
@@ -105,7 +105,7 @@ public class ObjectGrabber : MonoBehaviour
 
     public void DropObject()
     {
-        if (Item == null)
+        if (Item == null || _playerState.IsOnGround == false)
             return;
 
         SetNewPlace(null);

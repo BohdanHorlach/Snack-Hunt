@@ -17,7 +17,7 @@ public class ObjectFinderByMask : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (IsInLayerMask(other.gameObject.layer) == false)
+        if (_layerMask.IsEnterOnMask(other.transform) == false)
             return;
 
         OnObjectDetect?.Invoke(other.transform);
@@ -27,7 +27,7 @@ public class ObjectFinderByMask : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (IsInLayerMask(other.gameObject.layer) == false)
+        if (_layerMask.IsEnterOnMask(other.transform) == false)
             return;
 
         OnObjectStay?.Invoke(other.transform);
@@ -36,19 +36,13 @@ public class ObjectFinderByMask : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (IsInLayerMask(other.gameObject.layer) == false)
+        if (_layerMask.IsEnterOnMask(other.transform) == false)
             return;
 
         OnObjectLost?.Invoke(other.transform);
 
         if (_lastDetected == other.transform)
             _lastDetected = null;
-    }
-
-
-    private bool IsInLayerMask(LayerMask other)
-    {
-        return ((1 << other) & _layerMask) != 0;
     }
 
 

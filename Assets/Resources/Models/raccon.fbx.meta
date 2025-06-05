@@ -17,6 +17,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Raccon Pallete
+    second: {fileID: 2100000, guid: accaa752f8ea7594c91a3ee1d6962d31, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: White.001
     second: {fileID: 2100000, guid: 04da785abe5e9d143af8e53cf6cd503d, type: 2}
   materials:
@@ -31,8 +36,6 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 

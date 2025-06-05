@@ -7,23 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Base_white_color
-    second: {fileID: 2100000, guid: 2994003756fb70b43b6a2ad7698a4024, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
       name: DecorColor
-    second: {fileID: 2100000, guid: 04bd3e64d66f1eb4bbbd2b134ecb267d, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Fence_1
-    second: {fileID: 2100000, guid: 096452728bc8eca4695d51d0ff3ef71d, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Fence_2
-    second: {fileID: 2100000, guid: 178171ab7d045df4ea7a00655ba8d12e, type: 2}
+    second: {fileID: 2100000, guid: accaa752f8ea7594c91a3ee1d6962d31, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -37,18 +22,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Ground
-    second: {fileID: 2100000, guid: ae0e325d5036a0e4285492fe3e0493c4, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Lamp
-    second: {fileID: 2100000, guid: e759350a97870264db207bce22bdf1cc, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Lamp Second
-    second: {fileID: 2100000, guid: fb072504231633f43aaf3c96d7696dd2, type: 2}
+      name: Ground_house
+    second: {fileID: 2100000, guid: accaa752f8ea7594c91a3ee1d6962d31, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -62,8 +37,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Pallete
+    second: {fileID: 2100000, guid: accaa752f8ea7594c91a3ee1d6962d31, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Roof
-    second: {fileID: 2100000, guid: 4405c6a536d64864db89f2ca2daf9d70, type: 2}
+    second: {fileID: 2100000, guid: accaa752f8ea7594c91a3ee1d6962d31, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -73,17 +53,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Wall
-    second: {fileID: 2100000, guid: 2034faf7942183f4087001fcff8db046, type: 2}
+    second: {fileID: 2100000, guid: accaa752f8ea7594c91a3ee1d6962d31, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Window Frame.002
-    second: {fileID: 2100000, guid: c1bcbf8d53514d349a657319f95d50a4, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: WoodFlooringMahoganyAfricanSanded001_3K.003
-    second: {fileID: 2100000, guid: 320a660f78382dc41bf2dd67e4a72b9b, type: 2}
+    second: {fileID: 2100000, guid: accaa752f8ea7594c91a3ee1d6962d31, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -96,8 +71,6 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 

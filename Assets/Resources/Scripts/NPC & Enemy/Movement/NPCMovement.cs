@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-public class NPCMovement : PausedObject
+public class NPCMovement : MonoBehaviour, IPaused
 {
     [SerializeField] private NavMeshAgent _navAgent;
     [SerializeField] private float _moveSpeed = 5f;
@@ -136,13 +136,13 @@ public class NPCMovement : PausedObject
     }
 
 
-    public override void Pause()
+    public void Pause()
     {
         _navAgent.isStopped = true;
     }
 
 
-    public override void Resume()
+    public void Resume()
     {
         _navAgent.isStopped = false;
     }

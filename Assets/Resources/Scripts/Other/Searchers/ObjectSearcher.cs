@@ -28,7 +28,6 @@ public class ObjectSearcher
         float maxDistance = _searchSettings.rayDistance;
         float halfAngle = _searchSettings.searchForwardRaysAngle / 2f;
         float angleStep = _searchSettings.searchForwardRaysAngle / (_searchSettings.rayCount - 1);
-        //float targetDistance = GetDistanceToObjectFromRay(rayPosition, direction, maxDistance, _searchSettings.targetMask);
         
         for (int i = 0; i < _searchSettings.rayCount; i++)
         {
@@ -54,8 +53,6 @@ public class ObjectSearcher
         float dotPruduct = Vector3.Dot(forwardByRays, toTarget.normalized);
 
         float verticalAngle = Vector3.Angle(toTarget.normalized, forwardByRays);
-        //Debug.Log($"dotPruduct >= _dotThreshold {dotPruduct >= dotThreshold}");
-        //Debug.Log($"verticalAngle <= _searchVerticalAngle {verticalAngle <= _searchVerticalAngle}");
 
         return dotPruduct >= _searchSettings.dotThreshold && verticalAngle <= _searchSettings.searchVerticalAngle;
     }

@@ -13,6 +13,7 @@ public class HeadRotator : MonoBehaviour, IOnRewind
     private Tween _rotateTween;
     private Tween _IKTween;
     private Quaternion _defaultRotate;
+    public Transform Head { get => _head; }
 
     public Action OnStartRotateHead;
     public Action OnEndRotateHead;
@@ -53,7 +54,7 @@ public class HeadRotator : MonoBehaviour, IOnRewind
     }
 
     
-    public void OnRewind()
+    public void OnBeforeRewind()
     {
         _head.rotation = _defaultRotate;
     }

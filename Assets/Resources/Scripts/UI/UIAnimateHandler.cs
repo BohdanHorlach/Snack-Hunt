@@ -1,19 +1,32 @@
 using DG.Tweening;
+using System;
 using TMPro;
 using UnityEngine;
 
 
-public class UIAnimateHandler : PausedObject
+public class UIAnimateHandler : MonoBehaviour
 {
+    [SerializeField] private Health _player;
     [SerializeField] private Animator _UIAnimator;
     [SerializeField] private TextMeshProUGUI _counterOfBackToPlay;
-    [SerializeField] private GameObject[] _pauseMenuElements;
-
-    private const float DURATION = 0.8f;
-    private const float INTERVAL = 0.2f;
-
+    [SerializeField] private float _pauseDuration = 0.8f;
+    [SerializeField] private float _pauseInterval = 0.2f;
 
     public bool IsOnTransition { get; private set; } = false;
+
+    public Action OnRewindEnd;
+
+
+    private void OnEnable()
+    {
+        _player.OnTakeDamage += DoRewind;
+    }
+
+
+    private void OnDisable()
+    {
+        _player.OnTakeDamage -= DoRewind;
+    }
 
 
     private void StartCounterForEnterOnPlayMode()
@@ -35,18 +48,31 @@ public class UIAnimateHandler : PausedObject
                 _counterOfBackToPlay.transform.localScale = Vector3.zero;
             });
 
-            countdownSequence.Append(_counterOfBackToPlay.transform.DOScale(startScale, DURATION / 2));
-            countdownSequence.AppendInterval(INTERVAL);
-            countdownSequence.Append(_counterOfBackToPlay.transform.DOScale(Vector3.zero, DURATION / 2));
+            countdownSequence.Append(_counterOfBackToPlay.transform.DOScale(startScale, _pauseDuration / 2));
+            countdownSequence.AppendInterval(_pauseInterval);
+            countdownSequence.Append(_counterOfBackToPlay.transform.DOScale(Vector3.zero, _pauseDuration / 2));
         }
 
         countdownSequence.OnComplete(() => {
-            PauseHandler.SwitchMode();
+            PauseHandler.Play();
             _counterOfBackToPlay.enabled = false;
             _counterOfBackToPlay.transform.localScale = startScale;
             IsOnTransition = false;
         });
         countdownSequence.Play();
+    }
+
+
+    private void DoRewind(Transform obj, DamageSource damageSource)
+    {
+        _UIAnimator.SetTrigger("MakeRewind");
+    }
+
+
+    //Call from animator
+    private void EndRewind()
+    {
+        OnRewindEnd?.Invoke();
     }
 
 
@@ -63,11 +89,8 @@ public class UIAnimateHandler : PausedObject
     }
 
 
-    public override void Pause()
+    public void Pause()
     {
         _UIAnimator.SetTrigger("Pause");
     }
-
-
-    public override void Resume() { }
 }

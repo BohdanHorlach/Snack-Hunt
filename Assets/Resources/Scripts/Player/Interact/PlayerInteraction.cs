@@ -6,6 +6,12 @@ using UnityEngine;
 public class PlayerInteraction : InteractActivator
 {
     [SerializeField] private PlayerMovement _movement;
+    [SerializeField] private ObjectGrabber _grabber;
+    [SerializeField] private VisibilityByOther _visibilityByEnemy;
+
+    public bool IsCanInteract => _visibilityByEnemy.IsVisible == false
+                                && _grabber.IsHoldingObject == false;
+
 
     private void MoveToInteractPosition(Vector3 position)
     {
@@ -23,6 +29,9 @@ public class PlayerInteraction : InteractActivator
 
     public void Input()
     {
+        if (IsCanInteract == false)
+            return;
+
         if (_interaction.IsActive)
             base.AbortInteract(null);
         else

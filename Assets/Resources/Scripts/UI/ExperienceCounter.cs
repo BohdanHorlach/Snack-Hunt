@@ -29,7 +29,7 @@ public class ExperienceCounter : MonoBehaviour
         foreach (var foodCollector in _foodCollectors)
         {
             foodCollector.OnCounterChange -= StartTransition;
-            foodCollector.OnDropFood += DropFood;
+            foodCollector.OnDropFood -= DropFood;
         }
 
         _exitTrigger.OnTriggered -= ResetOutput;

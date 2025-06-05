@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public class PlayerState : PausedObject
+public class PlayerState : MonoBehaviour, IPaused
 {
     [SerializeField] private CharacterController _characterController;
     [SerializeField] private PlayerInteraction _interaction;
@@ -20,13 +20,13 @@ public class PlayerState : PausedObject
     public bool IsPaused { get; private set; }
 
 
-    public override void Pause()
+    public void Pause()
     {
         IsPaused = true;
     }
 
 
-    public override void Resume()
+    public void Resume()
     {
         IsPaused = false;
     }

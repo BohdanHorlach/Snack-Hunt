@@ -3,14 +3,6 @@ using System.Collections;
 using UnityEngine;
 
 
-[System.Serializable]
-public struct InteractClip
-{
-    public AnimationClip Clip;
-    public bool NeedDinamicBlend;
-}
-
-
 public class InteractionObject : MonoBehaviour
 {
     public Transform AttachebleObject;

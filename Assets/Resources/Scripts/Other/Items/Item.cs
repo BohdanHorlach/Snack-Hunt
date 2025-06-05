@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 [RequireComponent (typeof(Rigidbody))]
-public class Item : PausedObject
+public class Item : MonoBehaviour, IPaused
 {
     private Vector3 _velocityBeforePause;
     private bool _isEnableGravityBeforePause;
@@ -25,7 +25,7 @@ public class Item : PausedObject
     }
 
 
-    public override void Pause()
+    public void Pause()
     {
         _isEnableGravityBeforePause = Rigidbody.useGravity;
         _velocityBeforePause = Rigidbody.linearVelocity;
@@ -34,7 +34,7 @@ public class Item : PausedObject
     }
 
 
-    public override void Resume()
+    public void Resume()
     {
         SwitchPauseMode(false);
     }

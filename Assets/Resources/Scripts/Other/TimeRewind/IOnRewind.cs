@@ -1,4 +1,4 @@
 interface IOnRewind
 {
-    public void OnRewind();
+    public void OnBeforeRewind();
 }
