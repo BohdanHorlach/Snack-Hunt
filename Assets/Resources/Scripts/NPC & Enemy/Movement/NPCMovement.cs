@@ -4,8 +4,18 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-public class NPCMovement : MonoBehaviour, IPaused
+public class NPCMovement : MonoBehaviour, IPaused, IStateRewind
 {
+    private struct NPCMovementSnapshot
+    {
+        public Vector3 Position;
+        public Quaternion Rotation;
+        public bool IsSprinting;
+        public bool IsCreepWalking;
+        public bool CanMove;
+    }
+
+
     [SerializeField] private NavMeshAgent _navAgent;
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _sprintSpeed = 12f;
@@ -14,6 +24,7 @@ public class NPCMovement : MonoBehaviour, IPaused
     [SerializeField] private float _dashSpeed = 35f;
     [SerializeField] private float _dashCooldown = 0.3f;
 
+    private StateRecorder<NPCMovementSnapshot> _stateRecorder;
     private Vector3 _lastTargetPosition;
     private bool _isDashing = false;
 
@@ -24,7 +35,7 @@ public class NPCMovement : MonoBehaviour, IPaused
                 IsCreepWalking ? _creepWalkSpeed :
                 _moveSpeed;
     public Vector3 Velocity => _navAgent.velocity;
-    public bool IsReachedDestination { get; private set; }
+    public bool IsReachedDestination { get; private set; } = true;
     public bool IsSprinting { get; private set; } = false;
     public bool IsCreepWalking { get; private set; } = false;
     public bool CanMove { get; set; } = true;
@@ -34,6 +45,7 @@ public class NPCMovement : MonoBehaviour, IPaused
 
     private void Awake()
     {
+        _stateRecorder = new StateRecorder<NPCMovementSnapshot>(GetSnapshot, ApplySnapshot);
         _lastTargetPosition = CurrentPosition;
     }
 
@@ -55,7 +67,7 @@ public class NPCMovement : MonoBehaviour, IPaused
 
     private bool IsPathComplet()
     {
-        if (Vector3.Distance(_navAgent.destination, _navAgent.transform.position) <= _navAgent.stoppingDistance)
+        if (Vector3.Distance(_lastTargetPosition, _navAgent.transform.position) <= _navAgent.stoppingDistance)
         {
             if (!_navAgent.hasPath || _navAgent.velocity.sqrMagnitude == 0f)
             {
@@ -146,4 +158,33 @@ public class NPCMovement : MonoBehaviour, IPaused
     {
         _navAgent.isStopped = false;
     }
+
+
+    private NPCMovementSnapshot GetSnapshot()
+    {
+        return new NPCMovementSnapshot
+        {
+            Position = _navAgent.transform.position,
+            Rotation = _navAgent.transform.rotation,
+            IsSprinting = this.IsSprinting,
+            IsCreepWalking = this.IsCreepWalking,
+            CanMove = this.CanMove
+        };
+    }
+
+
+    private void ApplySnapshot(NPCMovementSnapshot snapshot)
+    {
+        SetTarget(snapshot.Position);
+        _navAgent.transform.position = snapshot.Position;
+        _navAgent.transform.rotation = snapshot.Rotation;
+        IsSprinting = snapshot.IsSprinting;
+        IsCreepWalking = snapshot.IsCreepWalking;
+        CanMove = snapshot.CanMove;
+    }
+
+
+    public void Record(bool needRemove) { _stateRecorder.Record(needRemove); }
+
+    public void Rewind() { _stateRecorder.Rewind(); }
 }

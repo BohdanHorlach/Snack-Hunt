@@ -9,11 +9,11 @@ public class Health : MonoBehaviour
     private bool _isDeath = false;
 
     public int CurrentHealth { get => _healthPoint; }
-    public Action<Transform, DamageSource> OnTakeDamage;
+    public Action OnTakeDamage;
     public Action OnDeath;
 
 
-    public void TakeDamage(DamageSource damageSource)
+    public void TakeDamage()
     {
         if (_isDeath)
             return;
@@ -27,7 +27,7 @@ public class Health : MonoBehaviour
         }
         else
         {
-            OnTakeDamage?.Invoke(transform, damageSource);
+            OnTakeDamage?.Invoke();
         }
     }
 }

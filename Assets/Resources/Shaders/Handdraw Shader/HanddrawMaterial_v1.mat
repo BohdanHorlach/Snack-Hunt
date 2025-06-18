@@ -41,7 +41,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _RGBCrossHatchTexture:
-        m_Texture: {fileID: 2800000, guid: e8b2938c686c9df4bbc9ea41dcdfcc61, type: 3}
+        m_Texture: {fileID: 2800000, guid: c3535dd6a5e771244a39b5f467d5dcd6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_425f5b7cd5b54e89885e1a2daa0b4c73_Texture_1_Texture2D:
@@ -96,15 +96,15 @@ Material:
     - _ENABLECROSSHATCH: 1
     - _ENABLETOONSHADOW: 1
     - _EdgeOffsetForce: 0.5
-    - _EdgeSize: 1.3
+    - _EdgeSize: 0.5
     - _NormalSmoothstepBegin: 0.2
     - _NormalSmoothstepEnd: 0.5
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _SmoothstepBeginDetectOfDepth: 0.1
-    - _SmoothstepBeginDetectOfNormal: 0.517
-    - _SmoothstepEndDetectOfDepth: 0.1
-    - _SmoothstepEndDetectOfNormal: 0.1
+    - _SmoothstepBeginDetectOfDepth: 1
+    - _SmoothstepBeginDetectOfNormal: 0.1
+    - _SmoothstepEndDetectOfDepth: 1
+    - _SmoothstepEndDetectOfNormal: 0.995
     - _ToonShadowTransparency: 0.147
     m_Colors:
     - _EdgeColor: {r: 0, g: 0, b: 0, a: 0}
@@ -116,7 +116,8 @@ Material:
     - _RemapShadowOutput: {r: 0.1, g: 1, b: 0, a: 0}
     - _ShadowMAsk: {r: 1, g: 1, b: 1, a: 1}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
-    - _TilingOfCrossHatchTexture: {r: 1.5, g: 1.5, b: 0, a: 0}
+    - _TilingOfCrossHatchTexture: {r: 0.3, g: 0.82, b: 0, a: 0}
     - _Vector2: {r: 5, g: -5, b: 0, a: 0}
     - _WorldSpaceLightPos0: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

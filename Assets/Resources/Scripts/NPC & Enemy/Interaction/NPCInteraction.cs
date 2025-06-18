@@ -2,9 +2,23 @@ using DG.Tweening;
 using UnityEngine;
 
 
-public class NPCInteraction : InteractActivator
+public class NPCInteraction : InteractActivator, IStateRewind
 {
+    private struct InteractionSnapshot
+    {
+        public InteractionObject Interaction;
+        public bool IsInteractionFinished;
+    }
+
+
     [SerializeField] private NPCMovement _movement;
+    private StateRecorder<InteractionSnapshot> _stateRecorder;
+
+
+    private void Awake()
+    {
+        _stateRecorder = new StateRecorder<InteractionSnapshot>(GetSnapshot, ApplySnapshot);
+    }
 
 
     protected override void OnEnable()
@@ -23,10 +37,16 @@ public class NPCInteraction : InteractActivator
 
     private void OnFindInteract()
     {
+        ApplyFindedInteract(false);
+    }
+
+
+    private void ApplyFindedInteract(bool isForceApply)
+    {
         base.ApplyInteract(() =>
         {
             MoveToInteractPosition(_interaction.InteractPosition);
-        });
+        }, isForceApply);
     }
 
 
@@ -45,4 +65,27 @@ public class NPCInteraction : InteractActivator
         _movement.SetTarget(position);
         _movement.OnTargetReached += RotateOnReachedDestination;
     }
+
+
+    private InteractionSnapshot GetSnapshot()
+    {
+        return new InteractionSnapshot {
+            Interaction = _interaction,
+            IsInteractionFinished = InteractIsFinished
+        };
+    }
+
+
+    private void ApplySnapshot(InteractionSnapshot snapshot)
+    {
+        _interaction = snapshot.Interaction;
+
+        if (snapshot.IsInteractionFinished == false)
+            ApplyFindedInteract(true);
+    }
+
+
+    public void Record(bool needRemove) { _stateRecorder.Record(needRemove); } 
+
+    public void Rewind() { _stateRecorder.Rewind(); }
 }

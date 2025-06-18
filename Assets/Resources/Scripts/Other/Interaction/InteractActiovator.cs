@@ -97,9 +97,9 @@ public class InteractActivator : MonoBehaviour
     }
 
 
-    protected void ApplyInteract(Action callback = null)
+    protected void ApplyInteract(Action callback = null, bool isForceApply = false)
     {
-        if (IsHaveInteract == false)
+        if (IsHaveInteract == false && isForceApply == false)
             return;
 
         OnApplyInteract?.Invoke();

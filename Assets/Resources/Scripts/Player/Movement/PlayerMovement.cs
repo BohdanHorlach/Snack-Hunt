@@ -25,7 +25,6 @@ public class PlayerMovement : MonoBehaviour
     private Action _onTargetReached;
     private CameraDirectionBuffer _cameraBufferDirection;
     private Vector3 _velocity;
-    private Vector3 _previousVelocity;
     private Vector3 _surfaceNormal;
     private Vector3? _targetPosition = null;
     private Vector2 _inputDirection;
@@ -55,6 +54,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool IsSptinting { get => _isSprint; }
     public bool IsSilentWalking { get => _isSilentWalk; }
+    public bool IsJumping { get => _isJump; }
 
 
 
@@ -163,8 +163,6 @@ public class PlayerMovement : MonoBehaviour
             _velocity.y = -_gravity * _gravityMultiplier * Time.fixedDeltaTime;
         else
             _velocity.y -= _gravity * _gravityMultiplier * Time.fixedDeltaTime;
-
-        _previousVelocity = _velocity;
     }
 
 
@@ -203,15 +201,15 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move(Vector3 direction, float speed)
     {
-        //Debug.DrawRay(transform.position, direction * 10, Color.red);
+        Vector3 moveOffset = direction * speed * Time.deltaTime;
 
-        Vector3 horizontalOffset = direction * speed * Time.deltaTime;
-        Vector3 verticaloffset = _velocity * Time.deltaTime;
+        if (_playerState.IsOnGround == false || _isJump)
+        {
+            moveOffset.y = 0;
+            moveOffset += _velocity * Time.deltaTime;
+        }
 
-        if (_isJump || Vector3.Distance(_velocity, _previousVelocity) <= VELOCITY_THRESHOLD)
-            horizontalOffset.y = 0;
-
-        _characterController.Move(horizontalOffset + verticaloffset);
+        _characterController.Move(moveOffset);
     }
 
 
@@ -267,11 +265,11 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    public void MoveTo(Vector3 position, Action onReached = null)
+    public void SetTarget(Vector3? position, Action onReached = null)
     {
         _targetPosition = position;
         _onTargetReached = onReached;
-        _isMoveToTarget = true;
+        _isMoveToTarget = position != null;
     }
 
 

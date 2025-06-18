@@ -15,6 +15,7 @@ public class CameraTargetSwitcher : MonoBehaviour
     [SerializeField] private Transform _defaultPosition;
     [SerializeField] private Transform _throwPosition;
     [SerializeField] private float _duration;
+    [SerializeField] private float _stopDistance = 8f;
 
     private Vector3 _targetLocalPosition;
 
@@ -84,7 +85,10 @@ public class CameraTargetSwitcher : MonoBehaviour
         Transform camera = Camera.main.transform;
 
         Vector3 direction = (transform.position - camera.position).normalized;
+        Vector3 targetPosition = transform.position - direction * _stopDistance;
         Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+        camera.DOMove(targetPosition, _duration).SetEase(Ease.OutSine);
 
         camera.DORotateQuaternion(targetRotation, _duration)
             .SetEase(Ease.OutSine)

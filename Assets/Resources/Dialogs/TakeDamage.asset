@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 643b061c0858cb04dbadf4889c0b116c, type: 3}
+  m_Name: TakeDamage
+  m_EditorClassIdentifier: 
+  Lines:
+  - Name: Raccoon
+    Line: And he caught me
+  - Name: Raccoon junior
+    Line: And how you're still here?
+  - Name: Raccoon
+    Line: No, it wasn't like that.
+  - Name: Raccoon
+    Line: Let's go back a little bit...
+  - Name: Raccoon junior
+    Line: ...

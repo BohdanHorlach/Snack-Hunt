@@ -5,14 +5,19 @@ using UnityEngine.InputSystem;
 
 public class PauseHandler : MonoBehaviour
 {
-    [SerializeField] private static UIAnimateHandler _UIAnimateHandler;
+    [SerializeField] private UIAnimateHandler _UIAnimateHandler;
 
+    private static PauseHandler _instance;
     private static IPaused[] _pauseds;
-    private static bool _isPaused = false;
+    public static bool IsPaused { get; private set; } = false;
 
 
     public void Awake()
     {
+        if (_instance != null)
+            return;
+
+        _instance = this;
         _pauseds = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
                     .OfType<IPaused>()
                     .ToArray();
@@ -24,7 +29,7 @@ public class PauseHandler : MonoBehaviour
         foreach (IPaused item in _pauseds)
             item.Resume();
 
-        _isPaused = false;
+        IsPaused = false;
     }
 
 
@@ -33,12 +38,32 @@ public class PauseHandler : MonoBehaviour
         foreach (IPaused item in _pauseds)
             item.Pause();
 
-        _isPaused = true;
+        IsPaused = true;
 
         if(withUI)
-            _UIAnimateHandler.Pause();
+            _instance._UIAnimateHandler.Pause();
     }
 
+
+    public void InputPause()
+    {
+        bool isDialogHidden = DialogSystem.IsHide;
+
+        if (DialogSystem.IsHide)
+        {
+            if (IsPaused)
+                _UIAnimateHandler.BackToPlay(true);
+            else
+                Pause(true);
+        }
+        else
+        {
+            if (_UIAnimateHandler.IsPaused)
+                _UIAnimateHandler.BackToPlay(false);
+            else
+                _UIAnimateHandler.Pause(); 
+        }
+    }
 
 
     public void InputPause(InputAction.CallbackContext context)
@@ -46,9 +71,6 @@ public class PauseHandler : MonoBehaviour
         if (context.started == false || _UIAnimateHandler.IsOnTransition)
             return;
 
-        if (_isPaused)
-            _UIAnimateHandler.BackToPlay();
-        else
-            Pause(true);
+        InputPause();
     }
 }

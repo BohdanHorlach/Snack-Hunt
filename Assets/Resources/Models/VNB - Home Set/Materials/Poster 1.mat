@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Poster 1
-  m_Shader: {fileID: -6465566751694194690, guid: e5cdab9c856195c4792459adab301608,
+  m_Shader: {fileID: -6465566751694194690, guid: 9a33ab1bcd0ef6f488bc71e0cc0df198,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0

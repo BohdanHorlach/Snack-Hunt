@@ -1,6 +1,6 @@
 public interface IPaused
 {
-    public void Pause();
+    public void Pause() { }
 
-    public void Resume();
+    public void Resume() { }
 }

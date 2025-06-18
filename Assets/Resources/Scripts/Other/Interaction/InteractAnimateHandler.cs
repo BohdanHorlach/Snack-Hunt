@@ -21,7 +21,6 @@ public class InteractAnimateHandler : MonoBehaviour, IPaused
     private AnimatorUpdateMode _updateModeBuffer;
 
     private bool _animationInProcessing = false;
-    private bool _isPaused;
 
 
     private void Start()
@@ -46,12 +45,10 @@ public class InteractAnimateHandler : MonoBehaviour, IPaused
         if (delay > 0f)
             yield return new WaitForSeconds(delay);
 
-        yield return new WaitUntil(() => !_isPaused);
-
         float blendTime = 0f;
         while (blendTime < 1f)
         {
-            yield return new WaitUntil(() => !_isPaused);
+            yield return new WaitUntil(() => !PauseHandler.IsPaused);
 
             blendTime += Time.deltaTime / duration;
             blendCallback(blendTime);
@@ -129,7 +126,7 @@ public class InteractAnimateHandler : MonoBehaviour, IPaused
             float t = 0f;
             while (t < outDelay)
             {
-                yield return new WaitUntil(() => !_isPaused);
+                yield return new WaitUntil(() => !PauseHandler.IsPaused);
                 t += Time.deltaTime;
                 yield return null;
             }
@@ -213,8 +210,6 @@ public class InteractAnimateHandler : MonoBehaviour, IPaused
 
     public void Pause()
     {
-        _isPaused = true;
-
         if(_topLevelMixer.IsNull() == false)
             _topLevelMixer.Pause();
     }
@@ -222,8 +217,6 @@ public class InteractAnimateHandler : MonoBehaviour, IPaused
 
     public void Resume()
     {
-        _isPaused = false;
-
         if (_topLevelMixer.IsNull() == false)
             _topLevelMixer.Play();
     }

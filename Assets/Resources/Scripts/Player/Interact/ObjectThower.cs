@@ -171,8 +171,11 @@ public class ObjectThrower : MonoBehaviour
             return;
 
         Rigidbody itemBody = _objectGrabber.Item.Rigidbody;
+        _objectGrabber.Item.IsThrowet = true;
         _objectGrabber.DropObject();
 
+        itemBody.isKinematic = false;
+        itemBody.useGravity = true;
         itemBody.freezeRotation = false;
         itemBody.linearVelocity = Vector3.zero;
         itemBody.angularVelocity = Vector3.zero;

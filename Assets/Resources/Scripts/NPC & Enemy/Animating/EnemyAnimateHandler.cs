@@ -2,8 +2,15 @@ using System;
 using UnityEngine;
 
 
-public class EnemyAnimateHandler : MonoBehaviour, IPaused
+public class EnemyAnimateHandler : MonoBehaviour, IPaused, IStateRewind
 {
+    private struct AnimatorSnapshot
+    {
+        public int SavedStateHash;
+        public float SavedNormalizedTime;
+    }
+
+
     [SerializeField] private Animator _animator;
     [SerializeField] private EnemyStateMachine _enemyStateMachine;
     [SerializeField] private Patroller _patroller;
@@ -12,7 +19,16 @@ public class EnemyAnimateHandler : MonoBehaviour, IPaused
     [SerializeField] private EnemyAttack _enemyAttack;
     [SerializeField] private NPCMovement _enemyMovement;
 
+    private StateRecorder<AnimatorSnapshot> _stateRecorder;
+
     public Action OnAttack;
+
+
+    private void Awake()
+    {
+        _stateRecorder = new StateRecorder<AnimatorSnapshot>(GetSnapshot, ApplySnapshot);
+        _enemyMovement.CanMove = false;
+    }
 
 
     private void OnEnable()
@@ -35,6 +51,9 @@ public class EnemyAnimateHandler : MonoBehaviour, IPaused
 
     private void Update()
     {
+        if (PauseHandler.IsPaused)
+            return;
+
         _animator.SetBool("IsPatrolling", _enemyStateMachine.IsPatrolling);
         _animator.SetBool("IsMoving", _enemyMovement.IsReachedDestination == false);
         _animator.SetBool("IsSprinting", _enemyMovement.IsSprinting);
@@ -55,6 +74,14 @@ public class EnemyAnimateHandler : MonoBehaviour, IPaused
     }
 
 
+    private void PlaySearch()
+    {
+        if (_enemyAttack.IsAttaking == false)
+            _animator.SetTrigger("Search");
+    }
+
+
+
     //Calls from Animator
     private void Attack()
     {
@@ -62,10 +89,10 @@ public class EnemyAnimateHandler : MonoBehaviour, IPaused
     }
 
 
-    private void PlaySearch()
+    //Calls from Animator
+    private void StartMove()
     {
-        if (_enemyAttack.IsAttaking == false)
-            _animator.SetTrigger("Search");
+        _enemyMovement.CanMove = true;
     }
 
 
@@ -79,4 +106,27 @@ public class EnemyAnimateHandler : MonoBehaviour, IPaused
     {
         _animator.enabled = true;
     }
+
+
+    private AnimatorSnapshot GetSnapshot()
+    {
+        AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+
+        return new AnimatorSnapshot
+        {
+            SavedStateHash = stateInfo.shortNameHash,
+            SavedNormalizedTime = stateInfo.normalizedTime
+        };
+    }
+
+
+    private void ApplySnapshot(AnimatorSnapshot snapshot)
+    {
+        _animator.Play(snapshot.SavedStateHash, 0, snapshot.SavedNormalizedTime);
+    }
+
+
+    public void Record(bool needRemove) { _stateRecorder.Record(needRemove); }
+
+    public void Rewind() { _stateRecorder.Rewind(); }
 }

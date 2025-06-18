@@ -2,8 +2,20 @@ using System;
 using UnityEngine;
 
 
-public class EnemyAttack : MonoBehaviour
+public class EnemyAttack : MonoBehaviour, IStateRewind
 {
+    private struct EnemyAttackSnapshot
+    {
+        public Vector3 NoisePosition;
+        public bool IsLostOfVisibility;
+        public bool IsNoisePositionChecked;
+        public bool IsLastPLayerPositionCheked;
+        public bool IsSearchBeforeLost;
+        public bool IsNeedAttacking;
+        public bool IsAttaking;
+    }
+
+
     [SerializeField] private NPCMovement _enemyMovement;
     [SerializeField] private ObjectFinderByMask _playerFinderInAttackSpace;
     [SerializeField] private ObjectFinderByMask _spaceNearby;
@@ -13,6 +25,8 @@ public class EnemyAttack : MonoBehaviour
     [SerializeField] private float _distanceThreshold = 1.5f;
     [SerializeField] private float _timeToLosePlayer = 8f;
 
+
+    private StateRecorder<EnemyAttackSnapshot> _stateRecorder;
     private Vector3 _playerPosition;
     private Vector3 _noisePosition;
     private bool _isLostOfVisibility = false;
@@ -27,7 +41,13 @@ public class EnemyAttack : MonoBehaviour
     public Action OnBeforeLost;
     public Action OnBackToAttack;
     public Action OnLost;
-    
+
+
+    private void Awake()
+    {
+        _stateRecorder = new StateRecorder<EnemyAttackSnapshot>(GetSnapshot, ApplySnapshot);
+    }
+
 
     private void OnEnable()
     {
@@ -52,7 +72,7 @@ public class EnemyAttack : MonoBehaviour
 
     private void Update()
     {
-        if (_isNeedAttacking == false)
+        if (_isNeedAttacking == false || PauseHandler.IsPaused)
             return;
 
         MoveToTarget();
@@ -175,4 +195,36 @@ public class EnemyAttack : MonoBehaviour
     {
         _isNeedAttacking = false;
     }
+
+
+    private EnemyAttackSnapshot GetSnapshot()
+    {
+        return new EnemyAttackSnapshot
+        {
+            NoisePosition = _noisePosition,
+            IsLostOfVisibility = _isLostOfVisibility,
+            IsNoisePositionChecked = _isNoisePositionChecked,
+            IsLastPLayerPositionCheked = _isLastPLayerPositionCheked,
+            IsSearchBeforeLost = _isSearchBeforeLost,
+            IsNeedAttacking = _isNeedAttacking,
+            IsAttaking = this.IsAttaking
+        };
+    }
+
+
+    private void ApplySnapshot(EnemyAttackSnapshot snapshot)
+    {
+        _noisePosition = snapshot.NoisePosition;
+        _isLostOfVisibility = snapshot.IsLostOfVisibility;
+        _isNoisePositionChecked = snapshot.IsNoisePositionChecked;
+        _isLastPLayerPositionCheked = snapshot.IsLastPLayerPositionCheked;
+        _isSearchBeforeLost = snapshot.IsSearchBeforeLost;
+        _isNeedAttacking = snapshot.IsNeedAttacking;
+        IsAttaking = snapshot.IsAttaking;
+    }
+
+
+    public void Record(bool needRemove) { _stateRecorder.Record(needRemove); }
+
+    public void Rewind() { _stateRecorder.Rewind(); }
 }

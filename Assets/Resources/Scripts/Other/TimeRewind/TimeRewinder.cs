@@ -5,26 +5,49 @@ using UnityEngine;
 
 public class TimeRewinder : MonoBehaviour
 {
+    [SerializeField] private PlayerDetecter[] _enemys; 
     [SerializeField] private float _recordingDuration = 10f;
 
-    private IOnRewind[] _otherRewinds;
+    private IOnRewind[] _onRewinds;
+    private IStateRewind[] _otherRewinds;
     private PositionRecorder _recorder;
 
 
-    private void Awake()
+    private void Start()
     {
-        RecordingObject[] recordingObjects = FindObjectsByType<RecordingObject>(FindObjectsSortMode.None);
-        _recorder = new PositionRecorder(recordingObjects, _recordingDuration);
+        var allMonoBehaviours = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None);
 
-        _otherRewinds = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
-                .OfType<IOnRewind>()
-                .ToArray();
+        _onRewinds = allMonoBehaviours
+            .OfType<IOnRewind>()
+            .ToArray();
+
+        _otherRewinds = allMonoBehaviours
+            .OfType<IStateRewind>()
+            .ToArray();
+
+        RecordingObject[] recordingObjects = FindObjectsByType<RecordingObject>(FindObjectsSortMode.None);
+        _recorder = new PositionRecorder(recordingObjects, _otherRewinds, _recordingDuration);
     }
 
 
     private void Update()
     {
+        if (IsVisibleByEnemys())
+            return;
+
         _recorder.Record();
+    }
+
+
+    private bool IsVisibleByEnemys()
+    {
+        foreach (PlayerDetecter enemy in _enemys)
+        {
+            if (enemy.IsDetect)
+                return true;
+        }
+
+        return false;
     }
 
 
@@ -36,15 +59,20 @@ public class TimeRewinder : MonoBehaviour
         {
             info.RecordingObject.transform.position = info.Position;
         }
-
-        _recorder.ClearRecorded();
     }
 
 
     private void PrepareToRewind()
     {
-        foreach (var item in _otherRewinds)
+        foreach (var item in _onRewinds)
             item.OnBeforeRewind();
+    }
+
+
+    private void RewindOther()
+    {
+        foreach (var item in _otherRewinds)
+            item.Rewind();
     }
 
 
@@ -54,6 +82,7 @@ public class TimeRewinder : MonoBehaviour
     {
         PrepareToRewind();
         RewindPosition();
+        RewindOther();
 
         PauseHandler.Play();
     }

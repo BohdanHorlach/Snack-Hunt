@@ -1,10 +1,22 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 
-public class EnemyStateMachine : MonoBehaviour
+public class EnemyStateMachine : MonoBehaviour, IStateRewind
 {
+    private struct EnemyStateSnapshot
+    {
+        public NPCState StateType;
+        public bool IsDetectedNoise;
+        public bool IsSearchingEnd;
+        public bool IsPlayerDetected;
+        public bool IsWasDetected;
+    }
+
+
     [SerializeField] private NPCMovement _enemyMovement;
+    [SerializeField] private PlayerMovement _playerMovement;
     [SerializeField] private Patroller _patroller;
     [SerializeField] private SearcherInSpace _searcherInSpace;
     [SerializeField] private EnemyAttack _enemyAttack;
@@ -16,7 +28,8 @@ public class EnemyStateMachine : MonoBehaviour
 
     private const int COUNT_STATES = 4;
 
-    private NPCState[] _enemyStates;
+    private Queue<EnemyStateSnapshot> _recordedSnapshot;
+    private List<NPCState> _enemyStates;
     private NPCState _currentState;
     private bool _isDetectedNoise = false;
     private bool _isSearchingEnd = false;
@@ -38,6 +51,7 @@ public class EnemyStateMachine : MonoBehaviour
         InitializeStatesArray();
         InitializeStates();
 
+        _recordedSnapshot = new Queue<EnemyStateSnapshot>();
         _currentState = _enemyStates[(int)NPCStateType.Idle];
     }
 
@@ -80,10 +94,10 @@ public class EnemyStateMachine : MonoBehaviour
 
     private void InitializeStatesArray()
     {
-        _enemyStates = new NPCState[COUNT_STATES];
+        _enemyStates = new List<NPCState>();
 
         for (int i = 0; i < COUNT_STATES; i++)
-            _enemyStates[i] = new NPCState();
+            _enemyStates.Add(new NPCState());
     }
 
 
@@ -146,7 +160,7 @@ public class EnemyStateMachine : MonoBehaviour
 
         NPCMovementMode movementMode;
         
-        if (distance >= _distanceForSprint || _isWasDetected)
+        if (distance >= _distanceForSprint || _isWasDetected || _playerMovement.IsSptinting)
             movementMode = NPCMovementMode.Sprint;
         else if (IsAttaking && distance <= _distanceForCreepWalk && _isWasDetected == false)
             movementMode = NPCMovementMode.CreepWalk;
@@ -228,5 +242,36 @@ public class EnemyStateMachine : MonoBehaviour
         _patroller.StartSearch();
         _isWasDetected = false;
         LostPlayer();
+    }
+
+
+    public void Record(bool needRemove)
+    {
+        _recordedSnapshot.Enqueue(new EnemyStateSnapshot
+        {
+            StateType = _currentState,
+            IsDetectedNoise = _isDetectedNoise,
+            IsSearchingEnd = _isSearchingEnd,
+            IsPlayerDetected = _isPlayerDetected,
+            IsWasDetected = _isWasDetected
+        });
+
+        if (needRemove)
+            _recordedSnapshot.Dequeue();
+    }
+
+
+    public void Rewind()
+    {
+        if (_recordedSnapshot.Count == 0)
+            return;
+
+        EnemyStateSnapshot snapshot = _recordedSnapshot.Dequeue();
+
+        _currentState = snapshot.StateType;
+        _isDetectedNoise = snapshot.IsDetectedNoise;
+        _isSearchingEnd = snapshot.IsSearchingEnd;
+        _isPlayerDetected = snapshot.IsPlayerDetected;
+        _isWasDetected = snapshot.IsWasDetected;
     }
 }

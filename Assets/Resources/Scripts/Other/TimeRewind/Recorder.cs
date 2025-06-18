@@ -8,13 +8,15 @@ public class PositionRecorder
 {
     private Queue<List<RecordingInfo>> _recordingInfos;
     private RecordingObject[] _recordingObjects;
+    private IStateRewind[] _otherRewinds;
     private float _recordingDuration;
     private float _recordingTime = 0f;
 
 
-    public PositionRecorder(RecordingObject[] recordingObjects, float recordingDuration = 10f)
+    public PositionRecorder(RecordingObject[] recordingObjects, IStateRewind[] otherRewinds, float recordingDuration = 10f)
     {
         _recordingInfos = new Queue<List<RecordingInfo>>();
+        _otherRewinds = otherRewinds;
         _recordingObjects = recordingObjects;
         _recordingDuration = recordingDuration;
     }
@@ -31,13 +33,17 @@ public class PositionRecorder
     }
 
 
+    private void RecordOther(bool needRemoveLast)
+    {
+        foreach (var item in _otherRewinds)
+            item.Record(needRemoveLast);
+    }
+
+
     private void RemoveLastPositions()
     {
-        if (_recordingTime >= _recordingDuration)
-        {
-            _recordingInfos.Dequeue();   
-            _recordingTime -= Time.deltaTime;
-        }
+        _recordingInfos.Dequeue();
+        _recordingTime -= Time.deltaTime;
     }
 
 
@@ -45,8 +51,13 @@ public class PositionRecorder
     {
         _recordingTime += Time.deltaTime;
 
-        RemoveLastPositions();
+        bool needRemoveLast = _recordingTime >= _recordingDuration;
+
         RecordPositions();
+        RecordOther(needRemoveLast);
+        
+        if(needRemoveLast)
+            RemoveLastPositions();
     }
 
 

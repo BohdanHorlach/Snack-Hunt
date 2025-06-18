@@ -13,6 +13,7 @@ public class UIAnimateHandler : MonoBehaviour
     [SerializeField] private float _pauseInterval = 0.2f;
 
     public bool IsOnTransition { get; private set; } = false;
+    public bool IsPaused { get; private set; } = false;
 
     public Action OnRewindEnd;
 
@@ -58,13 +59,15 @@ public class UIAnimateHandler : MonoBehaviour
             _counterOfBackToPlay.enabled = false;
             _counterOfBackToPlay.transform.localScale = startScale;
             IsOnTransition = false;
+            IsPaused = false;
         });
         countdownSequence.Play();
     }
 
 
-    private void DoRewind(Transform obj, DamageSource damageSource)
+    private void DoRewind()
     {
+        IsOnTransition = true;
         _UIAnimator.SetTrigger("MakeRewind");
     }
 
@@ -72,6 +75,7 @@ public class UIAnimateHandler : MonoBehaviour
     //Call from animator
     private void EndRewind()
     {
+        IsOnTransition = false;
         OnRewindEnd?.Invoke();
     }
 
@@ -82,15 +86,20 @@ public class UIAnimateHandler : MonoBehaviour
     }
 
 
-    public void BackToPlay()
+    public void BackToPlay(bool withCounter)
     {
         _UIAnimator.SetTrigger("BackToPlay");
-        StartCounterForEnterOnPlayMode();
+
+        if (withCounter)
+            StartCounterForEnterOnPlayMode();
+        else
+            IsPaused = false;
     }
 
 
     public void Pause()
     {
+        IsPaused = true;
         _UIAnimator.SetTrigger("Pause");
     }
 }

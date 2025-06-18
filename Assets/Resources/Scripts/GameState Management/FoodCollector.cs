@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
-using System.Linq;
 
 
 public class FoodCollector : MonoBehaviour
@@ -48,7 +47,7 @@ public class FoodCollector : MonoBehaviour
     {
         Item foodInfo = food.GetComponent<Item>();
 
-        if (_collector.Contains(foodInfo))
+        if (foodInfo == null || _collector.Contains(foodInfo))
             return;
 
         _counter += foodInfo.ExpPoint;
@@ -60,7 +59,7 @@ public class FoodCollector : MonoBehaviour
 
     private void LostFood(Transform food)
     {
-        if (_isCanRemoved == false)
+        if (_isCanRemoved == false || PauseHandler.IsPaused)
             return;
 
         Item foodInfo = food.GetComponent<Item>();

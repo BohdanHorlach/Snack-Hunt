@@ -7,12 +7,24 @@ public class DialogSystem : MonoBehaviour
 {
     [SerializeField] private Animator _dialogAnimator;
     [SerializeField] private DialogDisplay _display;
-    
+    [SerializeField] private UIAnimateHandler _UIAnimateHandler;
+
+    private static DialogSystem _instance;
     private DialogInfo _dialogInfo;
     private Action _hideCallback;
     private int _index = -1;
     private bool _isHide = true;
     private bool _callbackIsCalled = false;
+
+
+    public static bool IsHide { get => _instance._isHide; }
+
+
+    private void Awake()
+    {
+        if(_instance == null)
+            _instance = this;
+    }
 
 
     private void NextLine()
@@ -26,9 +38,9 @@ public class DialogSystem : MonoBehaviour
     }
 
 
-    public void OnInput(InputAction.CallbackContext context)
+    private void InputNext()
     {
-        if (context.canceled == false || _isHide)
+        if (_isHide)
             return;
 
         if (_display.IsTyping)
@@ -38,7 +50,17 @@ public class DialogSystem : MonoBehaviour
     }
 
 
-    public void Show(DialogInfo dialog, Action callback = null)
+    private void HideDialog()
+    {
+        _isHide = true;
+        _dialogAnimator.SetBool("IsHide", true);
+
+        if (_callbackIsCalled == false)
+            _hideCallback?.Invoke();
+    }
+
+
+    private void ShowDialog(DialogInfo dialog, Action callback = null)
     {
         _isHide = false;
         _dialogInfo = dialog;
@@ -47,22 +69,34 @@ public class DialogSystem : MonoBehaviour
         _hideCallback = () => 
         {
             _callbackIsCalled = true;
-            _index = -1;   
+            _index = -1;
 
+            Debug.Log(nameof(HideDialog));
             callback?.Invoke();
-            Hide();
+            HideDialog();
         };
 
         NextLine();
     }
 
 
-    public void Hide()
+    public static void Show(DialogInfo dialog, Action callback = null)
     {
-        _isHide = true;
-        _dialogAnimator.SetBool("IsHide", true);
+        _instance.ShowDialog(dialog, callback);
+    }
 
-        if (_callbackIsCalled == false)
-            _hideCallback?.Invoke();
+
+    public static void Hide()
+    {
+        _instance.HideDialog();
+    }
+
+
+    public void OnInput(InputAction.CallbackContext context)
+    {
+        if (context.canceled == false || _UIAnimateHandler.IsPaused)
+            return;
+
+        _instance.InputNext();
     }
 }

@@ -20,7 +20,7 @@ public class DamageSpace : MonoBehaviour
 
     private void MakeDamage(Transform transform)
     {
-        if(transform.TryGetComponent(out Health health))
-            health.TakeDamage(DamageSource.Attack);
+        if(transform.TryGetComponent(out HitBox hitBox))
+            hitBox.TakeDamage();
     }
 }

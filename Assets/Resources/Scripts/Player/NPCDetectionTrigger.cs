@@ -5,7 +5,6 @@ public class NPCDetectionTrigger : MonoBehaviour, IOnRewind
 {
     [SerializeField] private NPCStateMachine[] _NPCs;
     [SerializeField] private CameraTargetSwitcher _cameraSwitcher;
-    [SerializeField] private DialogSystem _dialogSystem;
     [SerializeField] private DialogInfo _showedDialog;
     [SerializeField] private Health _health;
 
@@ -36,7 +35,7 @@ public class NPCDetectionTrigger : MonoBehaviour, IOnRewind
         PauseHandler.Pause(false);
         _cameraSwitcher.LookAt(transform, 
             () => {
-                _dialogSystem.Show(_showedDialog, () => _health.TakeDamage(DamageSource.Trigger));
+                DialogSystem.Show(_showedDialog, () => _health.TakeDamage());
             });
     }
 

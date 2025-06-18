@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 
@@ -6,17 +7,12 @@ using UnityEngine;
 public class PlayerInteraction : InteractActivator
 {
     [SerializeField] private PlayerMovement _movement;
+    [SerializeField] private GameObject _enemyTarget;
     [SerializeField] private ObjectGrabber _grabber;
     [SerializeField] private VisibilityByOther _visibilityByEnemy;
 
     public bool IsCanInteract => _visibilityByEnemy.IsVisible == false
                                 && _grabber.IsHoldingObject == false;
-
-
-    private void MoveToInteractPosition(Vector3 position)
-    {
-        _movement.MoveTo(position, RotateOnReachedDestination);
-    }
 
 
     private void RotateOnReachedDestination()
@@ -27,14 +23,37 @@ public class PlayerInteraction : InteractActivator
     }
 
 
+    private void ConfigureInteraction(Vector3? targetPosition, Action onReachedCallback, bool isEnemyActive)
+    {
+        _movement.SetTarget(targetPosition, onReachedCallback);
+        _enemyTarget.SetActive(isEnemyActive);
+    }
+
+
+    private void OnAbortInteract()
+    {
+        ConfigureInteraction(null, null, true);
+    }
+
+
+    private void OnApplyInteraction()
+    {
+        ConfigureInteraction(
+            _interaction.InteractPosition,
+            RotateOnReachedDestination,
+            false
+        );
+    }
+
+
     public void Input()
     {
         if (IsCanInteract == false)
             return;
 
         if (_interaction.IsActive)
-            base.AbortInteract(null);
+            base.AbortInteract(OnAbortInteract);
         else
-            base.ApplyInteract(() => MoveToInteractPosition(_interaction.InteractPosition));
+            base.ApplyInteract(OnApplyInteraction);
     } 
 }

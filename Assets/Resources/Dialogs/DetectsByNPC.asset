@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Lines:
   - Name: Raccoon
-    Line: I was caught
+    Line: That's when I was found
   - Name: Raccoon junior
-    Line: What?
+    Line: Really?
   - Name: Raccoon
     Line: No, it wasn't like that.
   - Name: Raccoon

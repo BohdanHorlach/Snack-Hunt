@@ -15,7 +15,7 @@ Material:
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -71,7 +71,7 @@ Material:
     - _Cloud_Color: {r: 0.23117827, g: 0.23572358, b: 0.2981131, a: 0}
     - _Color: {r: 1, g: 0.9259279, b: 0, a: 0}
     - _GroundColor: {r: 0.108923286, g: 0.2754717, b: 0.093036644, a: 0}
-    - _Ground_Color: {r: 0.17735851, g: 0.1480846, b: 0.09470274, a: 0}
+    - _Ground_Color: {r: 0.17735851, g: 0.13481757, b: 0.06391599, a: 0}
     - _SkyColor: {r: 0.5466215, g: 0.5555527, b: 0.6150943, a: 0}
     - _Sky_Color: {r: 0, g: 0.011542686, b: 0.14716971, a: 0}
     - _SunColor: {r: 0.89433956, g: 0.89433956, b: 0.89433956, a: 0}

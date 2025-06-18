@@ -7,18 +7,18 @@ public class AnimateHandler : MonoBehaviour, IPaused, IOnRewind
 {
     [SerializeField] private Animator _animator;
     [SerializeField] private PlayerState _playerState;
-    [SerializeField] private Health _health;
     [SerializeField] private PlayerInteraction _interact;
     [SerializeField] private Climber _climber;
     [SerializeField] private ObjectGrabber _objectGrabber;
     [SerializeField] private ObjectThrower _objectThrower;
 
     private const float JUMP_COOLDOWN = 0.5f;
-    private const float MOVE_THRESHOLD = 0.05f;
+    private const float MOVE_THRESHOLD = 0.01f;
 
     private Vector3 _previousPosition;
     private bool _isSprint;
     private bool _isSilentWalking;
+    
 
     public Action OnMakeStep;
 
@@ -31,7 +31,6 @@ public class AnimateHandler : MonoBehaviour, IPaused, IOnRewind
 
     private void OnEnable()
     {
-        _health.OnTakeDamage += TakeDamage;
         _objectThrower.OnThrow += PlayThrow;
         _climber.OnClimb += PlayClimb;
     }
@@ -39,7 +38,6 @@ public class AnimateHandler : MonoBehaviour, IPaused, IOnRewind
 
     private void OnDisable()
     {
-        _health.OnTakeDamage -= TakeDamage;
         _objectThrower.OnThrow -= PlayThrow;
         _climber.OnClimb -= PlayClimb;
     }
@@ -47,7 +45,7 @@ public class AnimateHandler : MonoBehaviour, IPaused, IOnRewind
 
     private void Update()
     {
-        if (_climber.IsClimbing || _playerState.IsPaused)
+        if (_climber.IsClimbing || PauseHandler.IsPaused)
             return;
 
         float yDifference = _previousPosition.y - transform.position.y;
@@ -67,13 +65,6 @@ public class AnimateHandler : MonoBehaviour, IPaused, IOnRewind
     {
         _objectGrabber.DropObject();
         _animator.SetBool("IsHoldingObject", false);
-    }
-
-
-    private void TakeDamage(Transform transform, DamageSource damageSource)
-    {
-        if (damageSource == DamageSource.Attack)
-            _animator.SetBool("IsTakeDamage", true);
     }
 
 
@@ -125,7 +116,7 @@ public class AnimateHandler : MonoBehaviour, IPaused, IOnRewind
 
     public void PlayJump(InputAction.CallbackContext context)
     {
-        if (_playerState.IsPaused || !_playerState.IsOnGround || _playerState.IsBusy)
+        if (PauseHandler.IsPaused || !_playerState.IsOnGround || _playerState.IsBusy)
             return;
 
         if (context.started)
@@ -140,7 +131,7 @@ public class AnimateHandler : MonoBehaviour, IPaused, IOnRewind
 
     public void Interact(InputAction.CallbackContext context)
     {
-        if (context.started == false || _playerState.IsPaused)
+        if (context.started == false || PauseHandler.IsPaused)
             return;
 
         if (_interact.IsHaveInteract || _interact.InteractIsFinished == false)
@@ -167,6 +158,5 @@ public class AnimateHandler : MonoBehaviour, IPaused, IOnRewind
     public void OnBeforeRewind()
     {
         DropObject();
-        _animator.SetBool("IsTakeDamage", false);
     }
 }

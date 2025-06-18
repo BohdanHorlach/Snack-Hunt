@@ -431,7 +431,7 @@
                     "path": "<Keyboard>/anyKey",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Keyboard&Mouse",
                     "action": "NextDialog",
                     "isComposite": false,
                     "isPartOfComposite": false

@@ -27,7 +27,7 @@ public class HealthBar : MonoBehaviour
     }
 
 
-    private void TakeDamage(Transform transform, DamageSource damageSource)
+    private void TakeDamage()
     {
         _slider.value = _health.CurrentHealth;
     }
